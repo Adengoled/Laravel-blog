@@ -42,8 +42,7 @@ class Post extends Model
     public static function find($slug) {
 
     //of all the blogposts find the one with a slug that matches the one that was requested
-    $posts = static::getAll();
-    return $posts->firstWhere('slug', $slug);
+    return static::getAll()->firstWhere('slug', $slug);
 
     }
 }
