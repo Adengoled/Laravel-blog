@@ -17,17 +17,17 @@ use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 Route::get('/', function () {
 
-    $files = File::files(resource_path("posts")); //je haalt alle files uit de map "post"
-    $posts = array_map(function ($file) {
-        $document = YamlFrontMatter::parseFile($file); //je loopt door alle files in de map en voor elke file haal je content en stop je ze in $document
+    $posts = collect(File::files(resource_path("posts")))
+        ->map(function($file) {
+        $document = YamlFrontMatter::parseFile($file);
         return new Post (
-        $document->title,
-        $document->slug,
-        $document->excerpt,
-        $document->date,
-        $document->body()
-    );      //hier creeer je je posts volgens constructor (maak je objecten van class Post)
-    }, $files);
+            $document->title,
+            $document->slug,
+            $document->excerpt,
+            $document->date,
+            $document->body()
+            );
+        });
 
     return view('posts', [
         'posts' => $posts
