@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\File;
+use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 class Post extends Model
 {
@@ -25,19 +26,24 @@ class Post extends Model
     }
 
     public static function getAll() {
-        $files = File::files(resource_path("posts/"));
-
-        return array_map(function ($file) {
-            return $file->getContents();
-        }, $files);
+        return collect(File::files(resource_path("posts")))
+        ->map(function($file) { //$file = File::files
+        $document = YamlFrontMatter::parseFile($file);
+        return new Post (
+            $document->title,
+            $document->slug,
+            $document->excerpt,
+            $document->date,
+            $document->body()
+            );
+        });
     }
 
     public static function find($slug) {
 
-    if (! file_exists($path = resource_path("posts/{$slug}.html"))) {
-        throw new ModelNotFoundException(); //best practices
-    }
+    //of all the blogposts find the one with a slug that matches the one that was requested
+    $posts = static::getAll();
+    return $posts->firstWhere('slug', $slug);
 
-    return cache()->remember('posts.{$slug}', 3, fn () => file_get_contents($path));
     }
 }
