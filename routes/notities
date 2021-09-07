@@ -1,0 +1,22 @@
+    //Simpelste manier om pad voor verschillende posts te bouwen:
+    $post = file_get_contents(__DIR__ . "/../resources/posts/{$slug}.html");
+    return view('post', [
+        'post' => $post
+    ]);
+
+    //Verhuisd naar model Post.php:
+    $path = __DIR__ . "/../resources/posts/{$slug}.html";
+    if (! file_exists($path)) {
+        // ddd('file does not exist');
+        // abort(404); //eerste optie
+        return redirect('/'); //tweede optie
+    }
+
+    $post = cache()->remember('posts.{$slug}', now()->addSeconds(13), function () use ($path) {
+        return file_get_contents($path);
+    });
+    // // $post = file_get_contents($path);
+    
+        return view('post', [
+        'post' => $post
+    ]);
