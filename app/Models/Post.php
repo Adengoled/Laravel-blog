@@ -26,17 +26,21 @@ class Post extends Model
     }
 
     public static function getAll() {
-        return collect(File::files(resource_path("posts")))
-        ->map(function($file) { //$file = File::files
-        $document = YamlFrontMatter::parseFile($file);
-        return new Post (
-            $document->title,
-            $document->slug,
-            $document->excerpt,
-            $document->date,
-            $document->body()
-            );
+        return cache()->rememberForever('posts.all', function () {
+            return collect(File::files(resource_path("posts")))
+            ->map(function($file) { //$file = File::files
+                $document = YamlFrontMatter::parseFile($file);
+                return new Post (
+                    $document->title,
+                    $document->slug,
+                    $document->excerpt,
+                    $document->date,
+                    $document->body()
+                    );
+            })
+            ->sortByDesc('date');
         });
+
     }
 
     public static function find($slug) {
@@ -45,4 +49,16 @@ class Post extends Model
     return static::getAll()->firstWhere('slug', $slug);
 
     }
+
+    public static function findOrFail($slug) {
+
+        $post = static::find($slug);
+
+        if (! $post) {
+            throw new ModelNotFoundException();
+        }
+
+        return $post;
+    
+        }
 }

@@ -15,18 +15,14 @@ use App\Models\Post;
 */
 
 Route::get('/', function () {
-
     return view('posts', [
             'posts' => Post::getAll()
         ]);
-
 });
 
 Route::get('posts/{post}', function ($slug) {
     //Find a post by its slug and pass it to a view called post
     return view('post', [
-        'post' => Post::find($slug)
+        'post' => Post::findOrFail($slug)
     ]);
-
-
 })->where('post', '[A-z0-9_\-]+'); //restrictie zodat wildcard niet zomaar iets kan zijn
