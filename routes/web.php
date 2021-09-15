@@ -16,13 +16,12 @@ use App\Models\Post;
 
 Route::get('/', function () {
     return view('posts', [
-            'posts' => Post::getAll()
+            'posts' => Post::all()
         ]);
 });
 
-Route::get('posts/{post}', function ($slug) {
-    //Find a post by its slug and pass it to a view called post
+Route::get('posts/{post}', function ($id) {
     return view('post', [
-        'post' => Post::findOrFail($slug)
+        'post' => Post::findOrFail($id)
     ]);
-})->where('post', '[A-z0-9_\-]+'); //restrictie zodat wildcard niet zomaar iets kan zijn
+});
