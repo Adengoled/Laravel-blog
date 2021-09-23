@@ -41,4 +41,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function posts() {
+        return $this->hasMany(Post::class);  //we creeeren hier een relatie tss post en user om alle posts in onze view te kunnen weergeven die deze user geschreven heeft)
+    }
 }
