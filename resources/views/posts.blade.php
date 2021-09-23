@@ -9,7 +9,7 @@
                 </a>
             </h1>
 
-            <a href="#">{{$post->category->name}}</a>
+            <a href="categories/{{$post->category->slug}}">{{$post->category->name}}</a>
 
             <div>{{$post->excerpt}}</div>
             </article>

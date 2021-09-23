@@ -11,6 +11,6 @@ class Post extends Model
     protected $guarded = [];
 
     public function category() {
-        return $this->belongsTo(Category::class);  //om te begrijpen tot welke category onze post behoort (naam ipv id oproepen)
+        return $this->belongsTo(Category::class);  //we creeren hier een relatie tss post en categorie om de juiste categorie te kunnen weergeven in onze view
     }
 }
